@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Modulo Dati Sanitari</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Funzione per salvare i dati nel localStorage
+        function salvaDati(event) {
+            event.preventDefault(); // Evita il comportamento predefinito (invio del form)
+
+            // Ottieni i valori dal modulo
+            const nome = document.getElementById('nome').value;
+            const gruppoSanguigno = document.getElementById('gruppoSanguigno').value;
+
+            // Cane d'assistenza
+            const caneAssistenza = document.getElementById('caneAssistenza').value;
+            const statoCane = document.getElementById('statoCane') ? document.getElementById('statoCane').value : '';
+            const nomeCane = document.getElementById('nomeCane').value;
+            const tipoAssistenza = document.getElementById('tipoAssistenza').value;
+
+            // contatto 1
+            const numeroemergenza1 = document.getElementById('numeroemergenza1').value;
+            const nomecontatto1 = document.getElementById('nomecontatto1').value; 
+            const parentela1 = document.getElementById('parentela1').value;
+
+            // contatto 2
+            const numeroemergenza2 = document.getElementById('numeroemergenza2').value;
+            const nomecontatto2 = document.getElementById('nomecontatto2').value; 
+            const parentela2 = document.getElementById('parentela2').value;
+
+            // contatto 3
+            const numeroemergenza3 = document.getElementById('numeroemergenza3').value;
+            const nomecontatto3 = document.getElementById('nomecontatto3').value; 
+            const parentela3 = document.getElementById('parentela3').value;
+
+            const malattie = document.getElementById('malattie').value;
+            const farmaci = document.getElementById('farmaci').value;
+            const allergiefarmaci = document.getElementById('allergiefarmaci').value;
+            const allergiecibo = document.getElementById('allergiecibo').value;
+            const farmaciDaEvitare = document.getElementById('farmaciDaEvitare').value;
+            const note = document.getElementById('note').value;
+
+            // Salva i dati nel localStorage
+            const dati = {
+                nome,
+                gruppoSanguigno,
+                caneAssistenza,
+                statoCane,
+                nomeCane,
+                tipoAssistenza,
+
+                // contatto 1
+                numeroemergenza1,
+                parentela1,
+                nomecontatto1,
+
+                // contatto 2
+                numeroemergenza2,
+                parentela2,
+                nomecontatto2,
+
+                // contatto 3
+                numeroemergenza3,
+                parentela3,
+                nomecontatto3,
+
+                malattie,
+                farmaci,
+                allergiefarmaci,
+                allergiecibo,
+                farmaciDaEvitare,
+                note,
+            };
+
+            localStorage.setItem('datiSanitari', JSON.stringify(dati)); // Salva i dati nel localStorage
+
+            // Genera il link per visualizzare i dati in futuro
+            const link = window.location.href + '?id=' + btoa(Date.now()); // Link univoco basato sul timestamp
+            document.getElementById('linkFuturo').innerHTML = `
+                <p>I tuoi dati sono stati salvati. Salva il link come file pdf e inviacelo: 
+                <a href="${link}" target="_blank">${link}</a></p>
+            `;
+        }
+
+        // Funzione per mostrare o nascondere i campi aggiuntivi per il cane d'assistenza
+        function mostraCampoCaneAssistenza() {
+            const caneAssistenza = document.getElementById('caneAssistenza').value;
+            const dettagliCane = document.getElementById('dettagliCaneAssistenza');
+
+            if (caneAssistenza === 'si') {
+                dettagliCane.style.display = 'block';  // Mostra i campi del cane
+            } else {
+                dettagliCane.style.display = 'none';   // Nasconde i campi del cane
+            }
+        }
+
+        // Funzione per caricare i dati salvati dal localStorage
+        window.onload = function() {
+            const datiSalvati = localStorage.getItem('datiSanitari');
+            if (datiSalvati) {
+                const dati = JSON.parse(datiSalvati);
+                // Carica i dati nel modulo
+                document.getElementById('nome').value = dati.nome;
+                document.getElementById('gruppoSanguigno').value = dati.gruppoSanguigno;
+
+                // Cane d'assistenza
+                document.getElementById('caneAssistenza').value = dati.caneAssistenza;
+                mostraCampoCaneAssistenza(); // Mostra o nascondi i campi a seconda della scelta
+
+                if (dati.caneAssistenza === 'si') {
+                    document.getElementById('statoCane').value = dati.statoCane;
+                    document.getElementById('nomeCane').value = dati.nomeCane;
+                    document.getElementById('tipoAssistenza').value = dati.tipoAssistenza;
+                }
+
+                // contatto 1
+                document.getElementById('numeroemergenza1').value = dati.numeroemergenza1;
+                document.getElementById('nomecontatto1').value = dati.nomecontatto1;
+                document.getElementById('parentela1').value = dati.parentela1;
+
+                // contatto 2
+                document.getElementById('numeroemergenza2').value = dati.numeroemergenza2;
+                document.getElementById('nomecontatto2').value = dati.nomecontatto2;
+                document.getElementById('parentela2').value = dati.parentela2;
+
+                // contatto 3
+                document.getElementById('numeroemergenza3').value = dati.numeroemergenza3;
+                document.getElementById('nomecontatto3').value = dati.nomecontatto3;
+                document.getElementById('parentela3').value = dati.parentela3;
+
+                document.getElementById('malattie').value = dati.malattie;
+                document.getElementById('farmaci').value = dati.farmaci;
+                document.getElementById('allergiefarmaci').value = dati.allergiefarmaci;
+                document.getElementById('allergiecibo').value = dati.allergiecibo;
+                document.getElementById('farmaciDaEvitare').value = dati.farmaciDaEvitare;
+                document.getElementById('note').value = dati.note;
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Modulo Dati Sanitari</h1>
+        <p>Compila i seguenti campi con i tuoi dati sanitari.</p>
+    </header>
+
+    <main>
+        <form id="sanitForm" onsubmit="salvaDati(event)">
+            <fieldset>
+                <legend>Dati Personali</legend>
+
+                <label for="nome">Nome e Cognome:</label>
+                <input type="text" id="nome" name="nome" required placeholder="Inserisci il tuo nome">
+
+                <label for="caneAssistenza">Hai un cane d'assistenza?</label>
+                <select id="caneAssistenza" name="caneAssistenza" onchange="mostraCampoCaneAssistenza()">
+                    <option value="no">No</option>
+                    <option value="si">Sì</option>
+                </select>
+
+                <div id="dettagliCaneAssistenza" style="display: none;">
+                    <label for="statoCane">Stato del cane:</label>
+                    <select id="statoCane" name="statoCane">
+                        <option value="inAddestramento">In Addestramento</option>
+                        <option value="certificato">Certificato</option>
+                    </select>
+
+                    <label for="nomeCane">Nome del cane:</label>
+                    <input type="text" id="nomeCane" name="nomeCane" placeholder="Inserisci il nome del cane">
+
+                    <label for="tipoAssistenza">Tipo di assistenza:</label>
+                    <input type="text" id="tipoAssistenza" name="tipoAssistenza" placeholder="Descrivi il tipo di assistenza">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Recapiti di Emergenza</legend>
+                <h4>1.</h4>
+                <h5>Nome</h5>
+                <input type="text" id="nomecontatto1" name="nomecontatto1" placeholder="Nome contatto">
+                <h5>Legame</h5>
+                <input type="text" id="parentela1" name="parentela1" placeholder="Parentela">
+                <h5>Numero</h5>
+                <input type="text" id="numeroemergenza1" name="numeroemergenza1" placeholder="Numero di emergenza">
+
+                <h4>2.</h4>
+                <h5>Nome</h5>
+                <input type="text" id="nomecontatto2" name="nomecontatto2" placeholder="Nome contatto">
+                <h5>Legame</h5>
+                <input type="text" id="parentela2" name="parentela2" placeholder="Parentela">  
+                <h5>Numero</h5>
+                <input type="text" id="numeroemergenza2" name="numeroemergenza2" placeholder="Numero di emergenza">
+
+                <h4>3.</h4>
+                <h5>Nome</h5>
+                <input type="text" id="nomecontatto3" name="nomecontatto3" placeholder="Nome contatto">
+                <h5>Legame</h5>
+                <input type="text" id="parentela3" name="parentela3" placeholder="Parentela">
+                <h5>Numero</h5>
+                <input type="text" id="numeroemergenza3" name="numeroemergenza3" placeholder="Numero di emergenza">
+            </fieldset>
+
+            <fieldset>
+
+                <label for="gruppoSanguigno">Gruppo Sanguigno:</label>
+                <select id="gruppoSanguigno" name="gruppoSanguigno" required>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+
+
+                <legend>Informazioni mediche</legend>
+                <h5>Le mie malattie [max 5 righe]</h5>
+                <textarea id="malattie" name="malattie" placeholder="Malattie" rows="10"></textarea>
+                <h5>I farmaci che assumo [max 5 righe]</h5>
+                <textarea id="farmaci" name="farmaci" placeholder="Farmaci" rows="10"></textarea>
+                <h5>Le mie allergie ai farmaci [max 5 righe]</h5>
+                <textarea id="allergiefarmaci" name="allergiefarmaci" placeholder="Allergie farmaci" rows="10"></textarea>
+                <h5>Le mie allergie alimentari [max 5 righe]</h5>
+                <textarea id="allergiecibo" name="allergiecibo" placeholder="Allergie cibo" rows="10"></textarea>
+                <h5>Farmaci che devo assolutamente evitare [max 5 righe]</h5>
+                <textarea id="farmaciDaEvitare" name="farmaciDaEvitare" placeholder="Farmaci da evitare" rows="10"></textarea>
+                <h5>Note aggiuntive [max 5 righe]</h5>
+                <textarea id="note" name="note" placeholder="Note" rows="10"></textarea>
+            </fieldset>
+
+            <button type="submit">Salva i Dati</button>
+        </form>
+
+        <div id="linkFuturo"></div>
+    </main>
+</body>
+</html>
